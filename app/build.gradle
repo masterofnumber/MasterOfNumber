@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('..\\ks\\mon.keystore')
+            storePassword 'monmon'
+            keyAlias = 'mon'
+            keyPassword 'monmon'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.mon.masterofnumber"
@@ -14,6 +22,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 }
