@@ -1,16 +1,12 @@
-package com.mon.masterofnumber.adapter;
+package com.mon.masterofnumber.fragment.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.mon.masterofnumber.R;
 import com.mon.masterofnumber.controller.fragment_main_controller;
@@ -54,20 +50,21 @@ public class button_adapter extends BaseAdapter {
 
         final LinearLayout bk = (LinearLayout)convertView.findViewById(R.id.back);
         LinearLayout.LayoutParams lp =  new LinearLayout.LayoutParams(mSize,mSize);
-         bk.setLayoutParams(lp);
+        bk.setLayoutParams(lp);
 
         // 3
         final Button qlk = (Button)convertView.findViewById(R.id.qlk);
         qlk.setText(mButtons[position].mText);
         qlk.setWidth(mSize);
         qlk.setHeight(mSize);
+        final NVButton btn = mButtons[position];
 
         qlk.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                mController.notify(enumeration.TEvent.click_button);
+                mController.notify(enumeration.TEvent.click_button,btn);
             }
         });
         return convertView;

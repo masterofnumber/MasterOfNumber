@@ -3,31 +3,23 @@ package com.mon.masterofnumber.activity;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
-import android.view.Gravity;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-
+import com.mon.masterofnumber.structure.CallBack;
 import com.mon.masterofnumber.R;
-import com.mon.masterofnumber.adapter.button_adapter;
+import com.mon.masterofnumber.fragment.adapter.button_adapter;
 import com.mon.masterofnumber.controller.fragment_main_controller;
 import com.mon.masterofnumber.structure.NVButton;
 import com.mon.masterofnumber.structure.enumeration;
 
-import java.util.concurrent.Callable;
-
 public class MainActivity extends AppCompatActivity {
 
     fragment_main_controller mController;
+
+    final int BTN_ARCADE=1;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -35,15 +27,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mController = new fragment_main_controller();
-        mController.register(enumeration.TEvent.click_button,new Callable<Void>() {
-                    public Void call() {
-
+        mController.register(enumeration.TEvent.click_button, new CallBack<Void, NVButton>() {
+                    @Override
+                    public Void call(NVButton val) {
+                        clicked(val);
                         return null;
                     }
-                }
-        );
+                });
 
-        Toolbar tb = (Toolbar)findViewById(R.id.toolbar);
+                Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
         tb.setTitleTextColor(Color.WHITE);
         tb.setTitle(getResources().getString(R.string.title));
 
@@ -54,9 +46,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void clicked()
+    public void clicked(NVButton button)
     {
+        switch (button.mId) {
+            case BTN_ARCADE:
 
+                break;
+        }
     }
 
     private void Create_base_home()
@@ -71,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         NVButton[] buttons = new NVButton[3];
-        buttons[0] = new NVButton(getResources().getString(R.string.arcade),1);
+        buttons[0] = new NVButton(getResources().getString(R.string.arcade),BTN_ARCADE);
         buttons[1] = new NVButton(getResources().getString(R.string.challenge),2);
         buttons[2] = new NVButton(getResources().getString(R.string.ranking),3);
 
