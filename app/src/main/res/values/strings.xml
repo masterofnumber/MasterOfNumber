@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">MasterOfNumber</string>
     <string name="action_settings">Settings</string>
+    <string name="title">Master Of Number</string>
+
+    <string name="arcade">arcade</string>
+    <string name="challenge">challenge</string>
+    <string name="ranking">ranking</string>
+
 </resources>
