@@ -41,7 +41,7 @@ public class button_adapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-
+        int a = mButtons.length;
         // 2
         if (convertView == null) {
             final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
@@ -57,14 +57,15 @@ public class button_adapter extends BaseAdapter {
         qlk.setText(mButtons[position].mText);
         qlk.setWidth(mSize);
         qlk.setHeight(mSize);
-        qlk.setId(position);
+        qlk.setTag(position);
 
         qlk.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                mController.notify(enumeration.TEvent.click_button,mButtons[v.getId()]);
+               int pos =  Integer.parseInt(v.getTag().toString());
+                mController.notify(enumeration.TEvent.click_button,mButtons[pos]);
             }
         });
         return convertView;

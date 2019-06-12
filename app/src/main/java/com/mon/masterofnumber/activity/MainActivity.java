@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public void clicked(NVButton button)
     {
         switch (button.mId) {
-            case BTN_ARCADE:
+            case 1:
 
                 break;
         }
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         NVButton[] buttons = new NVButton[3];
-        buttons[0] = new NVButton(getResources().getString(R.string.arcade),BTN_ARCADE);
+        buttons[0] = new NVButton(getResources().getString(R.string.arcade),1);
         buttons[1] = new NVButton(getResources().getString(R.string.challenge),2);
         buttons[2] = new NVButton(getResources().getString(R.string.ranking),3);
 
@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
         if (colCount==1 && h>300)
             s=300;
 
-        final button_adapter booksAdapter = new button_adapter(this,s,buttons,mController);
-        playground.setAdapter(booksAdapter);
+        final button_adapter buttonAdapter = new button_adapter(this,s,buttons,mController);
+        playground.setAdapter(buttonAdapter);
 
     }
 
