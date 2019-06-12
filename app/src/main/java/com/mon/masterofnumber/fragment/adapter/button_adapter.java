@@ -57,14 +57,14 @@ public class button_adapter extends BaseAdapter {
         qlk.setText(mButtons[position].mText);
         qlk.setWidth(mSize);
         qlk.setHeight(mSize);
-        final NVButton btn = mButtons[position];
+        qlk.setId(position);
 
         qlk.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                mController.notify(enumeration.TEvent.click_button,btn);
+                mController.notify(enumeration.TEvent.click_button,mButtons[v.getId()]);
             }
         });
         return convertView;
