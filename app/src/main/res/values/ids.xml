@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- app_id -->
+    <string name="app_id" translatable="false">576371681554</string>
+    <!-- package_name -->
+    <string name="package_name" translatable="false">com.mon.masterofnumber</string>
+    <!-- leaderboard MasterOfNumberRecord -->
+    <string name="leaderboard_masterofnumberrecord" translatable="false">CgkIktK3k-MQEAIQAQ</string>
+</resources>
