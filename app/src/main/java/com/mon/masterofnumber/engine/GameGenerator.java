@@ -1,4 +1,4 @@
-package com.games.quicklycount;
+package com.mon.masterofnumber.engine;
 
 import java.util.Random;
 import java.util.ArrayList;
