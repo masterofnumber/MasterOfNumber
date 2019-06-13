@@ -1,26 +1,41 @@
 package com.mon.masterofnumber.fragment.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.mon.masterofnumber.R;
 import com.mon.masterofnumber.controller.fragment_main_controller;
 import com.mon.masterofnumber.structure.NVButton;
 import com.mon.masterofnumber.structure.enumeration;
 
+import java.util.ArrayList;
+
+import static android.support.v7.widget.RecyclerView.*;
+
+ class ButtonViewHolder extends RecyclerView.ViewHolder {
+    Button qlk;
+    RelativeLayout bk;
+    public ButtonViewHolder(View itemView) {
+        super(itemView);
+
+    }
+}
+
 public class button_adapter extends BaseAdapter {
 
     private final int mSize;
     private final Context mContext;
-    private final NVButton[] mButtons;
+    private final ArrayList<NVButton> mButtons;
     private fragment_main_controller mController = null;
 
-    public button_adapter(Context context, int size, NVButton[] buttons, fragment_main_controller controller) {
+    public button_adapter(Context context, int size, ArrayList<NVButton> buttons, fragment_main_controller controller) {
         this.mContext = context;
         this.mSize=size;
         this.mButtons = buttons;
@@ -29,7 +44,7 @@ public class button_adapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mButtons.length;
+        return mButtons.size();
     }
 
     // 3
@@ -41,31 +56,45 @@ public class button_adapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        int a = mButtons.length;
-        // 2
-        if (convertView == null) {
+
+
+        ViewHolder view;
+
+        if(convertView==null || position == 0)
+        {
             final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
             convertView = layoutInflater.inflate(R.layout.activity_fragment_main, null);
+            view = new ButtonViewHolder(convertView);
+
+            ((ButtonViewHolder) view).bk = (RelativeLayout)convertView.findViewById(R.id.back);
+            ((ButtonViewHolder) view).qlk = (Button)convertView.findViewById(R.id.qlk);
+            convertView.setTag(view);
+        }
+        else
+        {
+            view = (ViewHolder) convertView.getTag();
         }
 
-        final LinearLayout bk = (LinearLayout)convertView.findViewById(R.id.back);
+
+
         LinearLayout.LayoutParams lp =  new LinearLayout.LayoutParams(mSize,mSize);
-        bk.setLayoutParams(lp);
+        ((ButtonViewHolder) view).bk.setLayoutParams(lp);
 
         // 3
-        final Button qlk = (Button)convertView.findViewById(R.id.qlk);
-        qlk.setText(mButtons[position].mText);
-        qlk.setWidth(mSize);
-        qlk.setHeight(mSize);
-        qlk.setTag(position);
 
-        qlk.setOnClickListener(new View.OnClickListener()
+        ((ButtonViewHolder) view).qlk.setText(mButtons.get(position).mText);
+        ((ButtonViewHolder) view).qlk.setWidth(mSize);
+        ((ButtonViewHolder) view).qlk.setHeight(mSize);
+        ((ButtonViewHolder) view).qlk.setTag(position);
+
+
+        ((ButtonViewHolder) view).qlk.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                int pos =  Integer.parseInt(v.getTag().toString());
-                mController.notify(enumeration.TEvent.click_button,mButtons[pos]);
+                mController.notify(enumeration.TEvent.click_button,mButtons.get(pos));
             }
         });
         return convertView;
@@ -78,7 +107,10 @@ public class button_adapter extends BaseAdapter {
         return null;
     }
 
-
+    public void removeItem(int position){
+        mButtons.remove(position);
+        notifyDataSetChanged();
+    }
 
 
 }

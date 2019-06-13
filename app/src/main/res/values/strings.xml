@@ -8,5 +8,7 @@
     <string name="arcade">arcade</string>
     <string name="challenge">challenge</string>
     <string name="ranking">ranking</string>
-
+    <string name="lastbreathe">last breathe</string>
+    <string name="round">round</string>
+    <string name="back">back</string>
 </resources>

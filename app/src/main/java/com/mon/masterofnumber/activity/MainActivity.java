@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import com.mon.masterofnumber.structure.CallBack;
@@ -15,11 +17,14 @@ import com.mon.masterofnumber.controller.fragment_main_controller;
 import com.mon.masterofnumber.structure.NVButton;
 import com.mon.masterofnumber.structure.enumeration;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     fragment_main_controller mController;
+    button_adapter mButtonAdapter;
+    final ArrayList<NVButton> buttons = new ArrayList<NVButton>();
 
-    final int BTN_ARCADE=1;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -36,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
-        tb.setTitleTextColor(Color.WHITE);
+        tb.setTitleTextColor(Color.BLACK);
         tb.setTitle(getResources().getString(R.string.title));
 
 
-        Create_base_home();
+        create_base_home();
 
 
 
@@ -50,26 +55,45 @@ public class MainActivity extends AppCompatActivity {
     {
         switch (button.mId) {
             case 1:
-
+                create_arcade();
+                break;
+            case 6:
+                create_base_home();
                 break;
         }
     }
 
-    private void Create_base_home()
+    private void create_arcade()
     {
-        GridView playground = (GridView)findViewById(R.id.playground);
+        mButtonAdapter.removeItem(2);
+        mButtonAdapter.removeItem(1);
+        mButtonAdapter.removeItem(0);
+
+        buttons.add( new NVButton(getResources().getString(R.string.lastbreathe),4));
+        buttons.add(new NVButton(getResources().getString(R.string.round),5));
+        buttons.add(new NVButton(getResources().getString(R.string.back),6));
+
+        set_adapter(1,3,buttons);
+    }
+
+    private void create_base_home()
+    {
         LinearLayout parent_play =(LinearLayout)findViewById(R.id.parent_playground);
 
+        buttons.clear();
+        buttons.add(new NVButton(getResources().getString(R.string.arcade),1));
+        buttons.add( new NVButton(getResources().getString(R.string.challenge),2));
+        buttons.add( new NVButton(getResources().getString(R.string.ranking),3));
 
-        int colCount = 2;
-        int rowCount=2;
-        playground.setNumColumns(colCount);
+        set_adapter(2,2,buttons);
 
+    }
 
-        NVButton[] buttons = new NVButton[3];
-        buttons[0] = new NVButton(getResources().getString(R.string.arcade),1);
-        buttons[1] = new NVButton(getResources().getString(R.string.challenge),2);
-        buttons[2] = new NVButton(getResources().getString(R.string.ranking),3);
+    private void set_adapter(int rowCount, int colCount, ArrayList<NVButton> buttons)
+    {
+
+        GridView playground = (GridView)findViewById(R.id.playground);
+       playground.setNumColumns(colCount);
 
         Display display = getWindowManager(). getDefaultDisplay();
         Point size = new Point();
@@ -82,8 +106,10 @@ public class MainActivity extends AppCompatActivity {
         if (colCount==1 && h>300)
             s=300;
 
-        final button_adapter buttonAdapter = new button_adapter(this,s,buttons,mController);
-        playground.setAdapter(buttonAdapter);
+        mButtonAdapter = new button_adapter(this,s,buttons,mController);
+        playground.setAdapter(mButtonAdapter);
+        mButtonAdapter.notifyDataSetChanged();
+
 
     }
 
