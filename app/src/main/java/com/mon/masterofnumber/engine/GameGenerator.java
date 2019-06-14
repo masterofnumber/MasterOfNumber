@@ -14,62 +14,31 @@ public class GameGenerator {
 
     private List<Integer> _posUsed;
 
-    private String _sequence1;
-    private String _sequence2;
-    private String _sequence3;
-    private String _orderSequence1;
-    private String _orderSequence2;
-    private String _orderSequence3;
-
+    public List<GameData> Rounds;
 
     public GameGenerator() {
         // TODO Auto-generated constructor stub
         _randomManager = new Random();
+        Rounds = new ArrayList<>();
     }
 
-    public void CreateGame(int level)
+    public void CreateGame(Integer level,ArcadeModes arcadeMode,Integer gamesWithoutError)
     {
-        LevelInfo levelInf=new LevelInfo(level);
-        CreateRound(levelInf,1);
-        CreateRound(levelInf,2);
-        CreateRound(levelInf,3);
+        LevelInfo levelInf = new LevelInfo(level, gamesWithoutError);
+        Integer count = 1;
+        if (arcadeMode == ArcadeModes.Challenge)
+            count = 3;
+        for (Integer i=0;i<count;i++)
+        {
+            Rounds.add(CreateRound(levelInf, i+1));
+        }
     }
 
-    public String GetSequence1()
-    {
-        return _sequence1;
-    }
-
-    public String GetSequence2()
-    {
-        return _sequence2;
-    }
-
-    public String GetSequence3()
-    {
-        return _sequence3;
-    }
-
-    public String GetOrderSequence1()
-    {
-        return _orderSequence1;
-    }
-
-    public String GetOrderSequence2()
-    {
-        return _orderSequence2;
-    }
-
-    public String GetOrderSequence3()
-    {
-        return _orderSequence3;
-    }
-
-    private void RandomPos(int count)
+    private void RandomPos(Integer count)
     {
         _posUsed = new ArrayList<Integer>();
-        int index = 0;
-        for (int i =0;i<count;i++)
+        Integer index = 0;
+        for (Integer i =0;i<count;i++)
         {
             boolean first = true;
             do
@@ -80,7 +49,7 @@ public class GameGenerator {
                 }
                 else
                 {
-                    for (int k = 0;k<count;k++)
+                    for (Integer k = 0;k<count;k++)
                     {
                         if (!_posUsed.contains(k))
                         {
@@ -99,142 +68,116 @@ public class GameGenerator {
         }
     }
 
-    private  void CreateRound(LevelInfo level, int numberRound)
+    private GameData CreateRound(LevelInfo level,Integer levelWithoutErrors)
     {
-        _tmpSortList = new ArrayList<ToSort>();
-        _sortList = new ArrayList<ToSort>();
-        _numbers = new ArrayList<String>();
-        int count=12;
-        if (numberRound==3) count=16;
-        float number =0;
-        float decPart=0;
-        ToSort objNumber =null;
-        boolean flReplace=false;
-        int replaced=numberRound;
+        _tmpSortList = new ArrayList<>();
+        _sortList = new ArrayList<>();
+        _numbers = new ArrayList<>();
+        int count = level.Tot;
+        float   number = 0;
+        float    decPart = 0;
+        ToSort objNumber = null;
+        boolean flReplace = false;
+        int replaced = level.TotProximityNumber;
 
-        for (int i=0;i<count;i++)
+        for (Integer i = 0; i < count; i++)
         {
             do
             {
                 if (!flReplace)
                 {
-
-                    number=_randomManager.nextInt(level.MinValue()+level.MaxValue());
-                    number=number+level.MinValue();
+                    number = _randomManager.nextInt(level.MinValue + level.MaxValue);
+                    number = number + level.MinValue;
                 }
                 else
                 {
-                    number=Math.round(number);
+                    number = Math.round(number);
                 }
-                if (level.EnableDecimal() )
+                if (level.EnableDecimal)
                 {
-                    decPart=_randomManager.nextFloat();
-                    if (decPart>0)
+                    decPart = _randomManager.nextFloat();
+                    if (decPart > 0)
                     {
-                        decPart=Math.round(decPart*100);
-                        decPart=decPart/100;
+                        decPart = Math.round(decPart * 100);
+                        decPart = decPart / 100;
                     }
                 }
-                number=number+decPart;
-                if (level.EnableDecimal())
+                number = number + decPart;
+                if (level.EnableDecimal)
                     objNumber = new ToSort(number,Float.toString(number));
                 else
-                    objNumber = new ToSort(number,Float.toString(number).replace(".0", ""));
+                    objNumber = new ToSort(number, Float.toString(number).replace(".0", ""));
 
-            }while(ExistValue(objNumber.GetValue()));
+            } while (ExistValue(objNumber.GetValue()));
 
             _tmpSortList.add(objNumber);
 
 
-            flReplace=false;
-            if (level.EnableDecimal() && replaced>0)
+            flReplace = false;
+            if (level.EnableDecimal && replaced > 0)
             {
-                replaced-=1;
-                flReplace=true;
+                replaced -= 1;
+                flReplace = true;
             }
         }
         RandomPos(count);
         Collections.sort(_sortList);
 
-        String sequence ="";
-        String orderSequence = "";
-        for(ToSort toSort : _sortList){
-            if (orderSequence=="")
-                orderSequence=toSort.GetId();
-            else
-            {
-                if (numberRound==2)
-                    orderSequence=toSort.GetId()+";"+orderSequence;
-                else
-                    orderSequence+=";"+toSort.GetId();
-            }
-        }
+        GameData game = new GameData();
 
-        for(String value : _numbers){
-            if (sequence=="")
-                sequence=value;
-            else
-            {
-                if (numberRound==2)
-                    sequence=value+";"+sequence;
-                else
-                    sequence+=";"+value;
-            }
+        String currentIndex = "";
 
-        }
-
-        switch (numberRound)
+        if (level.OrderType == OrderTypes.Descending)
         {
-            case 1:
-                _sequence1=sequence;
-                _orderSequence1=orderSequence;
-                break;
-            case 2:
-                _sequence2=sequence;
-                _orderSequence2=orderSequence;
-                break;
-            case 3:
-                _sequence3=sequence;
-                _orderSequence3=orderSequence;
-                break;
+            List<ToSort> reverseOrdList = new ArrayList<>();
+            for (int i =0;i<_sortList.size();i++)
+            {
+                reverseOrdList.add(0, _sortList.get((i)));
+            }
+            _sortList = reverseOrdList;
         }
+
+        for (String value: _numbers)
+        {
+
+            for (int ind=0;ind<_sortList.size();ind++)
+            {
+                if (_sortList.get(ind).id==value)
+                {
+                    currentIndex=Integer.toString( ind+1);
+                    break;
+                }
+            }
+
+            if (game.Sequance==null || game.Sequance == "")
+            {
+                game.Sequance = value;
+                game.OrderNumberSequence= currentIndex;
+            }
+            else
+            {
+                game.Sequance += ";" + value;
+                game.OrderNumberSequence += ";" + currentIndex;
+            }
+        }
+
+        game.Rows = level.Rows;
+        game.Columns = level.Columns;
+        game.OrderType = level.OrderType;
+        game.Shufle = level.Shuffle;
+        game.Time = level.Time;
+        game.MalusTime = level.MalusTime;
+
+        return game;
     }
 
-    private boolean ExistValue(float value){
-        for(ToSort toSort : _tmpSortList){
-            if (toSort.GetValue()==value) return true;
-        }
-        return false;
-    }
-
-    public class LevelInfo
+    private Boolean ExistValue(double value)
     {
-        private int _minValue;
-        private int _maxValue;
-        private boolean _enableDecimal;
-
-        public LevelInfo(int level)
+        for (ToSort toSort:_tmpSortList)
         {
-            _enableDecimal=false;
-            _maxValue=20*(level+1);
-            if (level>10) _minValue=(5*(level+1))*-1;
-            if (level>20) _enableDecimal=true;
+            if (toSort.GetValue() == value) return true;
         }
-
-        public int MinValue()
-        {
-            return _minValue;
-        }
-
-        public int MaxValue()
-        {
-            return _maxValue;
-        }
-
-        public boolean EnableDecimal()
-        {
-            return _enableDecimal;
-        }
+        return Boolean.FALSE;
     }
 
     public class ToSort implements Comparable{
