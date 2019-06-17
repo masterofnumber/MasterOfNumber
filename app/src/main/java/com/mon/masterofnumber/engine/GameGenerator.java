@@ -22,7 +22,7 @@ public class GameGenerator {
         Rounds = new ArrayList<>();
     }
 
-    public void CreateGame(Integer level,ArcadeModes arcadeMode,Integer gamesWithoutError)
+    public List<GameData> CreateGame(Integer level,ArcadeModes arcadeMode,Integer gamesWithoutError)
     {
         LevelInfo levelInf = new LevelInfo(level, gamesWithoutError);
         Integer count = 1;
@@ -32,6 +32,7 @@ public class GameGenerator {
         {
             Rounds.add(CreateRound(levelInf, i+1));
         }
+        return Rounds;
     }
 
     private void RandomPos(Integer count)
