@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         set_adapter(1,3,buttons);
 
+        // Da rimuovere e mettere dove desideri
         GameGenerator gm = new GameGenerator();
         List<GameData> lst = gm.CreateGame(1, ArcadeModes.LastBreath,0);
     }
