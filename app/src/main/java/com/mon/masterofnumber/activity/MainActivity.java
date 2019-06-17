@@ -6,18 +6,21 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import com.mon.masterofnumber.structure.CallBack;
+
 import com.mon.masterofnumber.R;
-import com.mon.masterofnumber.fragment.adapter.button_adapter;
 import com.mon.masterofnumber.controller.fragment_main_controller;
+import com.mon.masterofnumber.engine.ArcadeModes;
+import com.mon.masterofnumber.engine.GameData;
+import com.mon.masterofnumber.engine.GameGenerator;
+import com.mon.masterofnumber.fragment.adapter.button_adapter;
+import com.mon.masterofnumber.structure.CallBack;
 import com.mon.masterofnumber.structure.NVButton;
 import com.mon.masterofnumber.structure.enumeration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
         buttons.add(new NVButton(getResources().getString(R.string.back),6));
 
         set_adapter(playground, 1,3,buttons);
+
+        GameGenerator gm = new GameGenerator();
+        List<GameData> lst = gm.CreateGame(1, ArcadeModes.LastBreath,0);
     }
 
     private void create_base_home()
