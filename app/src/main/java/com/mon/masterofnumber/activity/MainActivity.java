@@ -6,21 +6,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-
-import com.mon.masterofnumber.R;
-import com.mon.masterofnumber.controller.fragment_main_controller;
-import com.mon.masterofnumber.engine.ArcadeModes;
-import com.mon.masterofnumber.engine.GameData;
-import com.mon.masterofnumber.engine.GameGenerator;
-import com.mon.masterofnumber.fragment.adapter.button_adapter;
 import com.mon.masterofnumber.structure.CallBack;
+import com.mon.masterofnumber.R;
+import com.mon.masterofnumber.fragment.adapter.button_adapter;
+import com.mon.masterofnumber.controller.fragment_main_controller;
 import com.mon.masterofnumber.structure.NVButton;
 import com.mon.masterofnumber.structure.enumeration;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,19 +65,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void create_arcade()
     {
-        mButtonAdapter.removeItem(2);
-        mButtonAdapter.removeItem(1);
-        mButtonAdapter.removeItem(0);
+        LinearLayout top = (LinearLayout)findViewById(R.id.parent_playground);
+        top.removeAllViews();
 
+        GridView playground= new GridView(this);
+
+        playground.setLayoutParams(new GridView.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+        top.addView(playground);
+
+        buttons.clear();
         buttons.add( new NVButton(getResources().getString(R.string.lastbreathe),4));
         buttons.add(new NVButton(getResources().getString(R.string.round),5));
         buttons.add(new NVButton(getResources().getString(R.string.back),6));
 
-        set_adapter(1,3,buttons);
-
-        // Da rimuovere e mettere dove desideri
-        GameGenerator gm = new GameGenerator();
-        List<GameData> lst = gm.CreateGame(1, ArcadeModes.LastBreath,0);
+        set_adapter(playground, 1,3,buttons);
     }
 
     private void create_base_home()
@@ -92,14 +90,15 @@ public class MainActivity extends AppCompatActivity {
         buttons.add( new NVButton(getResources().getString(R.string.challenge),2));
         buttons.add( new NVButton(getResources().getString(R.string.ranking),3));
 
-        set_adapter(2,2,buttons);
+        GridView playground = (GridView)findViewById(R.id.playground);
+        set_adapter(playground, 2,2,buttons);
 
     }
 
-    private void set_adapter(int rowCount, int colCount, ArrayList<NVButton> buttons)
+    private void set_adapter(GridView playground, int rowCount, int colCount, ArrayList<NVButton> buttons)
     {
 
-        GridView playground = (GridView)findViewById(R.id.playground);
+      //  GridView playground = (GridView)findViewById(R.id.playground);
        playground.setNumColumns(colCount);
 
         Display display = getWindowManager(). getDefaultDisplay();
