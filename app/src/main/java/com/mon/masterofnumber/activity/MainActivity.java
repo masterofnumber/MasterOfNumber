@@ -1,21 +1,26 @@
 package com.mon.masterofnumber.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
-import com.mon.masterofnumber.R;
-import com.mon.masterofnumber.controller.fragment_main_controller;
 import com.mon.masterofnumber.engine.ArcadeModes;
 import com.mon.masterofnumber.engine.GameData;
 import com.mon.masterofnumber.engine.GameGenerator;
-import com.mon.masterofnumber.fragment.adapter.button_adapter;
+import com.mon.masterofnumber.structure.ButtonEventInfo;
 import com.mon.masterofnumber.structure.CallBack;
+import com.mon.masterofnumber.R;
+import com.mon.masterofnumber.fragment.adapter.button_adapter;
+import com.mon.masterofnumber.controller.fragment_main_controller;
 import com.mon.masterofnumber.structure.NVButton;
 import com.mon.masterofnumber.structure.enumeration;
 
@@ -35,15 +40,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mController = new fragment_main_controller();
-        mController.register(enumeration.TEvent.click_button, new CallBack<Void, NVButton>() {
+        mController.register(enumeration.TEvent.click_button, new CallBack<Void, ButtonEventInfo>() {
                     @Override
-                    public Void call(NVButton val) {
+                    public Void call(ButtonEventInfo val) {
                         clicked(val);
                         return null;
                     }
                 });
 
-                Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
         tb.setTitleTextColor(Color.BLACK);
         tb.setTitle(getResources().getString(R.string.title));
 
@@ -54,13 +59,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void clicked(NVButton button)
+    public void clicked(ButtonEventInfo info)
     {
-        switch (button.mId) {
-            case 1:
+        switch (info.mModelButton.mId) {
+            case 1: //arcade
                 create_arcade();
                 break;
-            case 6:
+            case 4: // lastbreathe
+                Intent playground = new Intent(MainActivity.this,playground_last_breathe.class);
+                startActivity(playground);
+                break;
+            case 6: //back
                 create_base_home();
                 break;
         }
@@ -83,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
         set_adapter(playground, 1,3,buttons);
 
-        GameGenerator gm = new GameGenerator();
-        List<GameData> lst = gm.CreateGame(1, ArcadeModes.LastBreath,0);
     }
 
     private void create_base_home()

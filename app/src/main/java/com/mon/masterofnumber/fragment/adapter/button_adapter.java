@@ -1,6 +1,7 @@
 package com.mon.masterofnumber.fragment.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.mon.masterofnumber.R;
 import com.mon.masterofnumber.controller.fragment_main_controller;
+import com.mon.masterofnumber.structure.ButtonEventInfo;
 import com.mon.masterofnumber.structure.NVButton;
 import com.mon.masterofnumber.structure.enumeration;
 
@@ -56,49 +58,48 @@ public class button_adapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-
-
         ViewHolder view;
 
-        if(convertView==null || position == 0)
-        {
-            final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-            convertView = layoutInflater.inflate(R.layout.activity_fragment_main, null);
-            view = new ButtonViewHolder(convertView);
+        final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        convertView = layoutInflater.inflate(R.layout.activity_fragment_main, null);
+        view = new ButtonViewHolder(convertView);
 
-            ((ButtonViewHolder) view).bk = (RelativeLayout)convertView.findViewById(R.id.back);
-            ((ButtonViewHolder) view).qlk = (Button)convertView.findViewById(R.id.qlk);
-            convertView.setTag(view);
-        }
-        else
-        {
-            view = (ViewHolder) convertView.getTag();
-        }
-
+        ((ButtonViewHolder) view).bk = (RelativeLayout)convertView.findViewById(R.id.back);
+        ((ButtonViewHolder) view).qlk = (Button)convertView.findViewById(R.id.qlk);
+        convertView.setTag(view);
 
 
         LinearLayout.LayoutParams lp =  new LinearLayout.LayoutParams(mSize,mSize);
         ((ButtonViewHolder) view).bk.setLayoutParams(lp);
 
         // 3
-
         ((ButtonViewHolder) view).qlk.setText(mButtons.get(position).mText);
         ((ButtonViewHolder) view).qlk.setWidth(mSize);
         ((ButtonViewHolder) view).qlk.setHeight(mSize);
         ((ButtonViewHolder) view).qlk.setTag(position);
-
-
         ((ButtonViewHolder) view).qlk.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                int pos =  Integer.parseInt(v.getTag().toString());
-                mController.notify(enumeration.TEvent.click_button,mButtons.get(pos));
+                ButtonEventInfo info = new ButtonEventInfo(mButtons.get(pos), (Button)v);
+                mController.notify(enumeration.TEvent.click_button,info );
             }
         });
         return convertView;
 
+    }
+
+    public void reset()
+    {
+        final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        View convertView = layoutInflater.inflate(R.layout.activity_fragment_main, null);
+
+        for(int i=0;i<getCount();i++)
+        {
+          //  mVisualButtons.get(i).setBackgroundColor(Color.argb(100,255,0,255));
+        }
     }
 
     // 4
