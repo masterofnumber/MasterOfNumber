@@ -3,10 +3,12 @@ package com.mon.masterofnumber.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
@@ -22,6 +24,8 @@ import com.mon.masterofnumber.structure.enumeration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.mon.masterofnumber.engine.ArcadeModes.LastBreath;
 
@@ -31,6 +35,10 @@ public class playground_last_breathe extends AppCompatActivity {
     fragment_main_controller mController;
     button_adapter mButtonAdapter;
     List<GameData> lst;
+    Timer timer;
+
+    final ArrayList<Button> allVisualbuttons = new ArrayList<Button>();
+    final ArrayList<Button> visualbuttons = new ArrayList<Button>();
     final ArrayList<NVButton> buttons = new ArrayList<NVButton>();
     int lev =0;
     int order = 1;
@@ -64,6 +72,7 @@ public class playground_last_breathe extends AppCompatActivity {
     public void clicked(ButtonEventInfo info)
     {
         int a = info.mModelButton.mOrder;
+        visualbuttons.add(info.mVisualButton);
 
         if (a==order)
         {
@@ -72,9 +81,20 @@ public class playground_last_breathe extends AppCompatActivity {
         }
         else
         {
-            info.mVisualButton.setBackgroundColor(Color.argb(100,255,0,0));
-            mButtonAdapter.reset();
+           for (int i=0;i<visualbuttons.size();i++)
+                visualbuttons.get(i).setBackgroundColor(Color.argb(100,255,0,0));
+
+            timer = new Timer();
+            timer.schedule(new RemindTask(), 200);
+
             order=1;
+        }
+    }
+
+    class RemindTask extends TimerTask {
+        public void run() {
+            for (int i=0;i<visualbuttons.size();i++)
+                visualbuttons.get(i).setBackgroundColor(Color.parseColor("#3355FF"));
         }
     }
 
@@ -129,4 +149,6 @@ public class playground_last_breathe extends AppCompatActivity {
 
 
     }
+
+
 }

@@ -71,8 +71,6 @@ public class button_adapter extends BaseAdapter {
 
         LinearLayout.LayoutParams lp =  new LinearLayout.LayoutParams(mSize,mSize);
         ((ButtonViewHolder) view).bk.setLayoutParams(lp);
-
-        // 3
         ((ButtonViewHolder) view).qlk.setText(mButtons.get(position).mText);
         ((ButtonViewHolder) view).qlk.setWidth(mSize);
         ((ButtonViewHolder) view).qlk.setHeight(mSize);
@@ -91,16 +89,7 @@ public class button_adapter extends BaseAdapter {
 
     }
 
-    public void reset()
-    {
-        final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-        View convertView = layoutInflater.inflate(R.layout.activity_fragment_main, null);
 
-        for(int i=0;i<getCount();i++)
-        {
-          //  mVisualButtons.get(i).setBackgroundColor(Color.argb(100,255,0,255));
-        }
-    }
 
     // 4
     @Override
