@@ -1,9 +1,8 @@
 package com.mon.masterofnumber.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.os.Handler;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +10,7 @@ import android.view.Display;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mon.masterofnumber.R;
 import com.mon.masterofnumber.controller.fragment_main_controller;
@@ -35,7 +35,10 @@ public class playground_last_breathe extends AppCompatActivity {
     fragment_main_controller mController;
     button_adapter mButtonAdapter;
     List<GameData> lst;
-    Timer timer;
+
+    TextView text_timer;
+    Timer timer_to_reset;
+    Timer timer_to_play;
 
     final ArrayList<Button> allVisualbuttons = new ArrayList<Button>();
     final ArrayList<Button> visualbuttons = new ArrayList<Button>();
@@ -43,11 +46,17 @@ public class playground_last_breathe extends AppCompatActivity {
     int lev =0;
     int order = 1;
 
+    int seconds=0;
+    int millisecon = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playground_last_breathe);
 
+        text_timer = (TextView) findViewById(R.id.timertext);
+        text_timer.setText("XXX:XXX");
         Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
         tb.setTitleTextColor(Color.BLACK);
         tb.setTitle(getResources().getString(R.string.title));
@@ -63,10 +72,43 @@ public class playground_last_breathe extends AppCompatActivity {
 
         gg = new GameGenerator();
         lst = gg.CreateGame(lev,LastBreath,0);
-
         create_arcade();
+        seconds = lst.get(0).Time;
+        millisecon = 0;
+
+        timer_to_play = new Timer();
+        timer_to_play. schedule(new PlayTask(), seconds,1);
+
+    }
+
+    class PlayTask extends TimerTask {
+        public void run() {
+            if(millisecon==0)
+            {
+                millisecon=999;
+                seconds--;
+            }
+            else
+            {
+                millisecon--;
+            }
 
 
+            if (seconds<=10 && seconds>5) {
+                if (millisecon == 500)
+                    text_timer.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                else if (millisecon == 0)
+                    text_timer.setTextColor(Color.parseColor("#000000"));
+            }
+            if (seconds<=5)
+                text_timer.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+
+            text_timer.setText(seconds + ":" + millisecon);
+            if (seconds==0 && millisecon==0) {
+                timer_to_play.cancel();
+                you_loose();
+            }
+        }
     }
 
     public void clicked(ButtonEventInfo info)
@@ -78,14 +120,21 @@ public class playground_last_breathe extends AppCompatActivity {
         {
             info.mVisualButton.setBackgroundColor(Color.argb(100,0,255,0));
             order++;
+
+            String v[] = lst.get(0).Sequance.split(";");
+            if (order>v.length)
+            {
+                timer_to_play.cancel();
+                you_win();
+            }
         }
         else
         {
            for (int i=0;i<visualbuttons.size();i++)
                 visualbuttons.get(i).setBackgroundColor(Color.argb(100,255,0,0));
 
-            timer = new Timer();
-            timer.schedule(new RemindTask(), 200);
+            timer_to_reset = new Timer();
+            timer_to_reset.schedule(new RemindTask(), 200);
 
             order=1;
         }
@@ -150,5 +199,15 @@ public class playground_last_breathe extends AppCompatActivity {
 
     }
 
+
+    public void you_win()
+    {
+
+    }
+
+    public void you_loose()
+    {
+
+    }
 
 }
