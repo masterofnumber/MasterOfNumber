@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.Gravity;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -35,7 +36,7 @@ public class playground_last_breathe extends AppCompatActivity {
     fragment_main_controller mController;
     button_adapter mButtonAdapter;
     List<GameData> lst;
-
+    TextView text_to_start;
     TextView text_timer;
     Timer timer_to_reset;
     Timer timer_to_play;
@@ -45,7 +46,7 @@ public class playground_last_breathe extends AppCompatActivity {
     final ArrayList<NVButton> buttons = new ArrayList<NVButton>();
     int lev =0;
     int order = 1;
-
+    int countdown_to_start=6;
     int seconds=0;
     int millisecon = 0;
 
@@ -56,7 +57,7 @@ public class playground_last_breathe extends AppCompatActivity {
         setContentView(R.layout.activity_playground_last_breathe);
 
         text_timer = (TextView) findViewById(R.id.timertext);
-        text_timer.setText("XXX:XXX");
+        text_timer.setText("");
         Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
         tb.setTitleTextColor(Color.BLACK);
         tb.setTitle(getResources().getString(R.string.title));
@@ -70,6 +71,10 @@ public class playground_last_breathe extends AppCompatActivity {
             }
         });
 
+
+        countdown_to_start();
+
+       /*
         gg = new GameGenerator();
         lst = gg.CreateGame(lev,LastBreath,0);
         create_arcade();
@@ -78,7 +83,83 @@ public class playground_last_breathe extends AppCompatActivity {
 
         timer_to_play = new Timer();
         timer_to_play. schedule(new PlayTask(), seconds,1);
+*/
+    }
 
+    public void clicked(ButtonEventInfo info)
+    {
+        int a = info.mModelButton.mOrder;
+        visualbuttons.add(info.mVisualButton);
+
+        if (a==order)
+        {
+            info.mVisualButton.setBackgroundColor(Color.argb(100,0,255,0));
+            order++;
+
+            String v[] = lst.get(0).Sequance.split(";");
+            if (order>v.length)
+            {
+                timer_to_play.cancel();
+                you_win();
+            }
+        }
+        else
+        {
+           for (int i=0;i<visualbuttons.size();i++)
+                visualbuttons.get(i).setBackgroundColor(Color.argb(100,255,0,0));
+
+            timer_to_reset = new Timer();
+            timer_to_reset.schedule(new RemindTask(), 200);
+
+            order=1;
+        }
+    }
+
+    void countdown_to_start()
+    {
+        countdown_to_start=6;
+
+        LinearLayout top = (LinearLayout)findViewById(R.id.parent_playground);
+        top.removeAllViews();
+
+        text_timer.setText("Livello: " + lev);
+        text_to_start = new TextView(this);
+        text_to_start.setTextSize(250);
+        text_to_start.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        text_to_start.setLayoutParams(new GridView.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+        top.addView(text_to_start);
+        text_to_start.setTextColor(Color.parseColor("#000000"));
+        text_to_start.setText("5");
+
+        timer_to_play = new Timer();
+        timer_to_play. schedule(new StartTask(), countdown_to_start,1000);
+    }
+
+    //'region timer cb'
+    class StartTask extends TimerTask {
+        public void run() {
+            countdown_to_start--;
+            String s = Integer.toString(countdown_to_start);
+            text_to_start.setText(s);
+
+            if (countdown_to_start==0) {
+                timer_to_play.cancel();
+
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        start();
+                    }
+                });
+
+            }
+        }
+    }
+
+    class RemindTask extends TimerTask {
+        public void run() {
+            for (int i=0;i<visualbuttons.size();i++)
+                visualbuttons.get(i).setBackgroundColor(Color.parseColor("#3355FF"));
+        }
     }
 
     class PlayTask extends TimerTask {
@@ -111,40 +192,21 @@ public class playground_last_breathe extends AppCompatActivity {
         }
     }
 
-    public void clicked(ButtonEventInfo info)
+
+    //'region timer cb'
+
+
+    private void start()
     {
-        int a = info.mModelButton.mOrder;
-        visualbuttons.add(info.mVisualButton);
+        gg = new GameGenerator();
+        lst = gg.CreateGame(lev,LastBreath,0);
+        create_arcade();
+        seconds = lst.get(0).Time;
+        millisecon = 0;
 
-        if (a==order)
-        {
-            info.mVisualButton.setBackgroundColor(Color.argb(100,0,255,0));
-            order++;
+        timer_to_play = new Timer();
+        timer_to_play. schedule(new PlayTask(), seconds,1);
 
-            String v[] = lst.get(0).Sequance.split(";");
-            if (order>v.length)
-            {
-                timer_to_play.cancel();
-                you_win();
-            }
-        }
-        else
-        {
-           for (int i=0;i<visualbuttons.size();i++)
-                visualbuttons.get(i).setBackgroundColor(Color.argb(100,255,0,0));
-
-            timer_to_reset = new Timer();
-            timer_to_reset.schedule(new RemindTask(), 200);
-
-            order=1;
-        }
-    }
-
-    class RemindTask extends TimerTask {
-        public void run() {
-            for (int i=0;i<visualbuttons.size();i++)
-                visualbuttons.get(i).setBackgroundColor(Color.parseColor("#3355FF"));
-        }
     }
 
     private void create_arcade()
@@ -202,6 +264,8 @@ public class playground_last_breathe extends AppCompatActivity {
 
     public void you_win()
     {
+        lev++;
+        countdown_to_start();
 
     }
 
