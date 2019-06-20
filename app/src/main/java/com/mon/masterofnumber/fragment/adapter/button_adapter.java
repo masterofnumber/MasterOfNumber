@@ -1,7 +1,6 @@
 package com.mon.masterofnumber.fragment.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,14 +31,16 @@ import static android.support.v7.widget.RecyclerView.*;
 
 public class button_adapter extends BaseAdapter {
 
-    private final int mSize;
+    private final int mHeight;
+    private final int mWidth;
     private final Context mContext;
     private final ArrayList<NVButton> mButtons;
     private fragment_main_controller mController = null;
 
-    public button_adapter(Context context, int size, ArrayList<NVButton> buttons, fragment_main_controller controller) {
+    public button_adapter(Context context, int height, int width, ArrayList<NVButton> buttons, fragment_main_controller controller) {
         this.mContext = context;
-        this.mSize=size;
+        this.mHeight =height;
+        this.mWidth=width;
         this.mButtons = buttons;
         this.mController = controller;
     }
@@ -69,11 +70,11 @@ public class button_adapter extends BaseAdapter {
         convertView.setTag(view);
 
 
-        LinearLayout.LayoutParams lp =  new LinearLayout.LayoutParams(mSize,mSize);
+        LinearLayout.LayoutParams lp =  new LinearLayout.LayoutParams(mWidth,mHeight);
         ((ButtonViewHolder) view).bk.setLayoutParams(lp);
         ((ButtonViewHolder) view).qlk.setText(mButtons.get(position).mText);
-        ((ButtonViewHolder) view).qlk.setWidth(mSize);
-        ((ButtonViewHolder) view).qlk.setHeight(mSize);
+        ((ButtonViewHolder) view).qlk.setWidth(mWidth);
+        ((ButtonViewHolder) view).qlk.setHeight(mHeight);
         ((ButtonViewHolder) view).qlk.setTag(position);
         ((ButtonViewHolder) view).qlk.setOnClickListener(new View.OnClickListener()
         {

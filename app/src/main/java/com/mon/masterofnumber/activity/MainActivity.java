@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         GridView playground= new GridView(this);
 
-        playground.setLayoutParams(new GridView.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+        playground.setLayoutParams(new GridView.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         top.addView(playground);
 
         buttons.clear();
@@ -103,17 +104,17 @@ public class MainActivity extends AppCompatActivity {
         buttons.add( new NVButton(getResources().getString(R.string.challenge),2));
         buttons.add( new NVButton(getResources().getString(R.string.ranking),3));
 
+
         GridView playground = (GridView)findViewById(R.id.playground);
-        set_adapter(playground, 2,2,buttons);
+
+        set_adapter(playground, 4,3,buttons);
 
     }
 
     private void set_adapter(GridView playground, int rowCount, int colCount, ArrayList<NVButton> buttons)
     {
-
-      //  GridView playground = (GridView)findViewById(R.id.playground);
-       playground.setNumColumns(colCount);
-
+       /* playground.setNumColumns(colCount);
+        playground.setGravity(Gravity.CENTER);
         Display display = getWindowManager(). getDefaultDisplay();
         Point size = new Point();
         display. getSize(size);
@@ -121,13 +122,39 @@ public class MainActivity extends AppCompatActivity {
         int h = (size.y/100)*70;
         h-=100;
         int w = size.x;
-        int s = (h)/rowCount< (w)/colCount ? (h)/rowCount :(w)/colCount;
-        if (colCount==1 && h>300)
+        int s = (w)/colCount ; //(h)/rowCount< (w)/colCount ? (h)/rowCount :(w)/colCount;
+        if (rowCount==1 && h>300)
             s=300;
 
-        mButtonAdapter = new button_adapter(this,s,buttons,mController);
+        mButtonAdapter = new button_adapter(this,s,s,buttons,mController);
+        playground.setAdapter(mButtonAdapter);
+        mButtonAdapter.notifyDataSetChanged();*/
+
+        playground.setNumColumns(colCount);
+
+
+        Display display = getWindowManager(). getDefaultDisplay();
+        Point size = new Point();
+        display. getSize(size);
+
+        size.y -= 60;
+        size.y -= (size.y/100)*20;
+        size.y-=(10*rowCount);
+
+        int w = size.x;
+        //int s = (h)/lst.get(0).Rows< (w)/lst.get(0).Columns ? (h)/lst.get(0).Rows :(w)/lst.get(0).Columns;
+        //if (lst.get(0).Columns==1 && h>300)
+        //  s=300;
+        int s = (w)/colCount ; //(h)/rowCount< (w)/colCount ? (h)/rowCount :(w)/colCount;
+        int h = size.y / rowCount;
+           h=400;
+
+        mButtonAdapter = new button_adapter(this,h,s,buttons,mController);
+
+        //mButtonAdapter = new button_adapter(this,s,s,buttons,mController);
         playground.setAdapter(mButtonAdapter);
         mButtonAdapter.notifyDataSetChanged();
+
 
 
     }

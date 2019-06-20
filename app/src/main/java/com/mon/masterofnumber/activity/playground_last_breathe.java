@@ -46,7 +46,7 @@ public class playground_last_breathe extends AppCompatActivity {
     final ArrayList<NVButton> buttons = new ArrayList<NVButton>();
     int lev =0;
     int order = 1;
-    int countdown_to_start=6;
+    int countdown_to_start=4;
     int seconds=0;
     int millisecon = 0;
 
@@ -74,16 +74,6 @@ public class playground_last_breathe extends AppCompatActivity {
 
         countdown_to_start();
 
-       /*
-        gg = new GameGenerator();
-        lst = gg.CreateGame(lev,LastBreath,0);
-        create_arcade();
-        seconds = lst.get(0).Time;
-        millisecon = 0;
-
-        timer_to_play = new Timer();
-        timer_to_play. schedule(new PlayTask(), seconds,1);
-*/
     }
 
     public void clicked(ButtonEventInfo info)
@@ -117,7 +107,7 @@ public class playground_last_breathe extends AppCompatActivity {
 
     void countdown_to_start()
     {
-        countdown_to_start=6;
+        countdown_to_start=4;
 
         LinearLayout top = (LinearLayout)findViewById(R.id.parent_playground);
         top.removeAllViews();
@@ -129,7 +119,7 @@ public class playground_last_breathe extends AppCompatActivity {
         text_to_start.setLayoutParams(new GridView.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
         top.addView(text_to_start);
         text_to_start.setTextColor(Color.parseColor("#000000"));
-        text_to_start.setText("5");
+        text_to_start.setText("3");
 
         timer_to_play = new Timer();
         timer_to_play. schedule(new StartTask(), countdown_to_start,1000);
@@ -243,18 +233,27 @@ public class playground_last_breathe extends AppCompatActivity {
 
         playground.setNumColumns(lst.get(0).Columns);
 
+
         Display display = getWindowManager(). getDefaultDisplay();
         Point size = new Point();
         display. getSize(size);
 
-        int h = (size.y/100)*70;
-        h-=100;
-        int w = size.x;
-        int s = (h)/lst.get(0).Rows< (w)/lst.get(0).Columns ? (h)/lst.get(0).Rows :(w)/lst.get(0).Columns;
-        if (lst.get(0).Columns==1 && h>300)
-            s=300;
+        size.y -= 60;
+        size.y -= (size.y/100)*20;
+        size.y-=(10*lst.get(0).Rows);
 
-        mButtonAdapter = new button_adapter(this,s,buttons,mController);
+        int w = size.x;
+        //int s = (h)/lst.get(0).Rows< (w)/lst.get(0).Columns ? (h)/lst.get(0).Rows :(w)/lst.get(0).Columns;
+        //if (lst.get(0).Columns==1 && h>300)
+          //  s=300;
+        int s = (w)/lst.get(0).Columns ; //(h)/rowCount< (w)/colCount ? (h)/rowCount :(w)/colCount;
+        int h = size.y / lst.get(0).Rows;
+        if (h>400)
+            h=400;
+
+        mButtonAdapter = new button_adapter(this,h,s,buttons,mController);
+
+        //mButtonAdapter = new button_adapter(this,s,s,buttons,mController);
         playground.setAdapter(mButtonAdapter);
         mButtonAdapter.notifyDataSetChanged();
 
